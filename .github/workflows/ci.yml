@@ -9,20 +9,15 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v2
-    - name: Install Docker CLI
-      run: |
-        sudo apt-get update
-        docker version
-        pwd
     - name: Copy Docker certs to the remote machine
       run: |
-        mkdir -p /root/.docker
-        echo "${{ secrets.DOCKER_CA_CERT }}" > /root/.docker/ca.pem
-        echo "${{ secrets.DOCKER_CLIENT_CERT }}" > /root/.docker/cert.pem
-        echo "${{ secrets.DOCKER_CLIENT_KEY }}" > /root/.docker/key.pem
+        mkdir -p /home/runner/work/.docker
+        echo "${{ secrets.DOCKER_CA_CERT }}" > /home/runner/work/.docker/ca.pem
+        echo "${{ secrets.DOCKER_CLIENT_CERT }}" > /home/runner/work/.docker/cert.pem
+        echo "${{ secrets.DOCKER_CLIENT_KEY }}" > /home/runner/work/.docker/key.pem
     - name: Docker Compose Up
       run: |
         export DOCKER_HOST=tcp://13.239.21.231:2376
         export DOCKER_TLS_VERIFY=1
-        export DOCKER_CERT_PATH=/root/.docker
+        export DOCKER_CERT_PATH=/home/runner/work/.docker
         docker-compose up -d --build
