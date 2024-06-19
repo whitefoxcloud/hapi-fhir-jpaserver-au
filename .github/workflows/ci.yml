@@ -23,6 +23,5 @@ jobs:
         export DOCKER_TLS_VERIFY=1
         export DOCKER_CERT_PATH=/home/runner/work/.docker
         echo ${{ env.COMPOSE_PROJECT_NAME }}
-        echo ${{ COMPOSE_PROJECT_NAME }}
         export COMPOSE_PROJECT_NAME=${{ env.COMPOSE_PROJECT_NAME }}
         docker-compose up -d --build
