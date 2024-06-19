@@ -19,6 +19,8 @@ jobs:
         echo "${{ secrets.DOCKER_CLIENT_KEY }}" > /home/runner/work/.docker/key.pem
     - name: Docker Compose Up
       run: |
+        export POSTGRES_USER=${{ secrets.POSTGRES_USER }}
+        export POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}
         export DOCKER_HOST=tcp://13.239.21.231:2376
         export DOCKER_TLS_VERIFY=1
         export DOCKER_CERT_PATH=/home/runner/work/.docker

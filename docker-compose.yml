@@ -1,38 +1,20 @@
-# services:
-#   hapi-fhir-au:
-#     build: .
-#     container_name: hapi-fhir-au
-#     restart: on-failure
-#     ports:
-#       - "8080:8080"
-#   hapi-fhir-postgres:
-#     image: postgres:16-alpine
-#     container_name: hapi-fhir-postgres
-#     restart: always
-#     environment:
-#       POSTGRES_DB: "hapi"
-#       POSTGRES_USER: "admin"
-#       POSTGRES_PASSWORD: "admin"
-#     volumes:
-#       - hapi-fhir-postgres:/var/lib/postgresql/data
-# volumes:
-#   hapi-fhir-postgres:
-
-version: '3.8'
-
 services:
-  postgres:
-    image: postgres:16-alpine
-    container_name: postgres
-    environment:
-      POSTGRES_USER: exampleuser
-      POSTGRES_PASSWORD: examplepass
-      POSTGRES_DB: exampledb
+  hapi-fhir-au:
+    build: .
+    container_name: hapi-fhir-au
+    restart: on-failure
     ports:
-      - "5432:5432"
+      - "8080:8080"
+  hapi-fhir-postgres:
+    image: postgres:16-alpine
+    container_name: hapi-fhir-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: "hapi-fhir-au"
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     volumes:
-      - postgres_data:/var/lib/postgresql/data
-
+      - hapi-fhir-postgres:/var/lib/postgresql/data
 volumes:
-  postgres_data:
+  hapi-fhir-postgres:
 
