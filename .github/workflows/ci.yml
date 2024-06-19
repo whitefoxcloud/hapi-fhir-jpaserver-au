@@ -1,0 +1,28 @@
+name: FHIR AU Test Server
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+    - name: Install Docker CLI
+      run: |
+        apt-get update
+        apt-get install -y docker.io
+    - name: Copy Docker certs to the remote machine
+      run: |
+        mkdir -p /root/.docker
+        echo "${{ secrets.DOCKER_CA_CERT }}" > /root/.docker/ca.pem
+        echo "${{ secrets.DOCKER_CLIENT_CERT }}" > /root/.docker/cert.pem
+        echo "${{ secrets.DOCKER_CLIENT_KEY }}" > /root/.docker/key.pem
+    - name: Docker Compose Up
+      run: |
+        export DOCKER_HOST=tcp://13.239.21.231:2376
+        export DOCKER_TLS_VERIFY=1
+        export DOCKER_CERT_PATH=/root/.docker
+        docker-compose up -d --build
