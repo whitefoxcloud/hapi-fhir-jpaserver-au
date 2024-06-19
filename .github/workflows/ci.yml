@@ -11,8 +11,9 @@ jobs:
       uses: actions/checkout@v2
     - name: Install Docker CLI
       run: |
-        apt-get update
-        apt-get install -y docker.io
+        sudo apt-get update
+        sudo apt-get install -y docker.io
+        pwd
     - name: Copy Docker certs to the remote machine
       run: |
         mkdir -p /root/.docker
