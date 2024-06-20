@@ -1,7 +1,5 @@
 name: FHIR AU Test Server
 on:
-  schedule:
-  - cron: "*/3 * * * *"
   push:
     branches:
       - main
