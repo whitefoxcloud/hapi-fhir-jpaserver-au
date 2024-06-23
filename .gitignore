@@ -170,3 +170,4 @@ Temporary Items
 **/charts/*.tgz
 
 .vscode/
+.env

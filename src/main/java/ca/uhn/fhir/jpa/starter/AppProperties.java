@@ -37,6 +37,7 @@ public class AppProperties {
   private Boolean allow_multiple_delete = false;
   private Boolean allow_override_default_search_params = true;
   private Boolean auto_create_placeholder_reference_targets = false;
+  private Boolean mass_ingestion_mode_enabled = false;
   private final Set<String> auto_version_reference_at_paths = new HashSet<>();
   private Boolean language_search_parameter_enabled = false;
   private Boolean dao_scheduling_enabled = true;
@@ -96,6 +97,8 @@ public class AppProperties {
   private Integer bundle_batch_pool_max_size = 100;
   private final Set<String> local_base_urls = new HashSet<>();
   private final Set<String> logical_urls = new HashSet<>();
+  
+  private Boolean resource_dbhistory_enabled = true;
 
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
@@ -320,6 +323,14 @@ public Cors getCors() {
   public void setAllow_override_default_search_params(
     Boolean allow_override_default_search_params) {
     this.allow_override_default_search_params = allow_override_default_search_params;
+  }
+
+  public Boolean getMass_ingestion_mode_enabled() {
+    return mass_ingestion_mode_enabled;
+  }
+
+  public void setMass_ingestion_mode_enabled(Boolean mass_ingestion_mode_enabled) {
+    this.mass_ingestion_mode_enabled = mass_ingestion_mode_enabled;
   }
 
   public Boolean getAuto_create_placeholder_reference_targets() {
@@ -903,4 +914,12 @@ public Cors getCors() {
   public void setEnable_index_of_type(boolean enable_index_of_type) {
     this.enable_index_of_type = enable_index_of_type;
   }
+
+public Boolean getResource_dbhistory_enabled() {
+	return resource_dbhistory_enabled;
+}
+
+public void setResource_dbhistory_enabled(Boolean resource_dbhistory_enabled) {
+	this.resource_dbhistory_enabled = resource_dbhistory_enabled;
+}
 }

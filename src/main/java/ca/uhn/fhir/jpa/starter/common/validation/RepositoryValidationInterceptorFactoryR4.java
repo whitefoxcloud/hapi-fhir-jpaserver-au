@@ -29,9 +29,9 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
  * The <code>enable_repository_validating_interceptor</code> property must be enabled in <code>application.yaml</code>
  * in order to use this class.
  */
-//@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
+@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
 @Configuration
-//Conditional(OnR4Condition.class)
+@Conditional(OnR4Condition.class)
 public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryValidationInterceptorFactory {
 
 	private final FhirContext fhirContext;
@@ -89,8 +89,10 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 		// of enabling validation for all Patient resources
 		repositoryValidatingRuleBuilder
 				.forResourcesOfType("Patient")
-				//.requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient")
-				//.and()
+				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient")
+				.forResourcesOfType("Practitioner")
+				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner")
+				.and()				
 				.requireValidationToDeclaredProfiles();
 
 		// Do not customize below this line

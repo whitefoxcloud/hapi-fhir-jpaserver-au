@@ -167,7 +167,6 @@ public class StarterJpaConfig {
 	@ConditionalOnProperty(prefix = "hapi.fhir", name = ENABLE_REPOSITORY_VALIDATING_INTERCEPTOR, havingValue = "true")
 	public RepositoryValidatingInterceptor repositoryValidatingInterceptor(
 			IRepositoryValidationInterceptorFactory factory) {
-		System.out.println("VVFF");
 		return factory.buildUsingStoredStructureDefinitions();
 	}
 
