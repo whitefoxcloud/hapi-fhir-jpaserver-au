@@ -16,14 +16,14 @@
 			}
 
 			// Replace content if static/welcome.html exists
-			fileExists("content/custom/welcome.html", function(exists) {
+			/*fileExists("content/custom/welcome.html", function(exists) {
 				if (exists) {
 					loadFile("content/custom/welcome.html", function(content) {
 						var replacementContainer = document.getElementById("replacementWelcome");
 						replacementContainer.innerHTML = content;
 					});
 				}
-			});
+			});*/
 
 			// Function to load file content using AJAX
 			function loadFile(filePath, callback) {
@@ -37,7 +37,7 @@
 				xhr.send();
 			}
 		</script>
-		<div class="panel-body">
+		<div class="panel-body" style="padding: 20px;">
 			<div id="replacementWelcome">
 
 				<p>
@@ -58,7 +58,7 @@
 				</p>
 				
 				<p>
-					<strong>Further Information:</strong> For a comprehensive introduction to this server as a reference implementation, please refer to the <a href="https://www.whitefox.cloud/articles/from-concept-to-implementation.html">article</a> on Whitefox.cloud website [link to the article].
+					<strong>Further Information:</strong> For a comprehensive introduction to this server as a reference implementation, please refer to the <a href="https://www.whitefox.cloud/articles/from-concept-to-implementation.html">article</a> on Whitefox.cloud website.
 				</p>
 				
 				<p>
