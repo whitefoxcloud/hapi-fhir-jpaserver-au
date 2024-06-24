@@ -18,6 +18,10 @@ services:
     build:
       context: .
       dockerfile: Postgres.Dockerfile
+      args:
+        POSTGRES_DB: "hapi-fhir-au"
+        POSTGRES_USER: ${POSTGRES_USER}
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}     
     container_name: hapi-fhir-postgres
     restart: always
     environment:
