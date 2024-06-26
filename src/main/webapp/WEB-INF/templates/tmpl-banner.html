@@ -14,6 +14,14 @@
 
         document.title = "Whitefox Test FHIR Server";
 
+        var navbarBrand = document.querySelector('.navbar-brand');
+        navbarBrand.innerHTML = '<img id="logo" src="img/whitefox-logo-notext.svg" height="34" alt="Whitefox Brand Logo"/> Home';
+
+        var link = document.querySelector('a.nav-link[href="https://github.com/hapifhir/hapi-fhir"]');
+        if (link) {
+            link.href = "https://github.com/whitefoxcloud/hapi-fhir-jpaserver-au";
+        }
+
         const liElement = document.querySelector('.nav-item.dropdown');
         if (liElement) {
             liElement.remove();
