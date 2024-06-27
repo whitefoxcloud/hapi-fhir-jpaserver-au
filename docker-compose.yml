@@ -9,7 +9,7 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect"
-      HAPI_FHIR_TESTER_HOME_SERVER_ADDRESS: "https://fhir.witefox.cloud/fhir"
+      HAPI_FHIR_TESTER_HOME_SERVER_ADDRESS: "https://fhir.whitefox.cloud/fhir"
     ports:
       - "80:8080"
     depends_on:
