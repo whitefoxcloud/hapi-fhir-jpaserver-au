@@ -9,9 +9,9 @@ services:
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
       SPRING_DATASOURCE_DRIVERCLASSNAME: "org.postgresql.Driver"
       SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT: "ca.uhn.fhir.jpa.model.dialect.HapiFhirPostgresDialect"
-      JAVA_OPTS: "-Xms1g -Xmx1g -XX:+UseG1GC -XX:MaxGCPauseMillis=200"
+      HAPI_FHIR_TESTER_HOME_SERVER_ADDRESS: "https://fhir.witefox.cloud/fhir"
     ports:
-      - "8080:8080"
+      - "80:8080"
     depends_on:
       - hapi-fhir-postgres
 
@@ -22,12 +22,10 @@ services:
       args:
         POSTGRES_DB: "hapi-fhir-au"
         POSTGRES_USER: ${POSTGRES_USER}
-        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}     
+        POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
     container_name: hapi-fhir-postgres
     restart: always
     environment:
       POSTGRES_DB: "hapi-fhir-au"
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
-    ports:
-      - "5432:5432"
