@@ -43,7 +43,6 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 		RepositoryConfig.class
 	}, properties =
   {
-	  "spring.profiles.include=storageSettingsTest",
      "spring.datasource.url=jdbc:h2:mem:dbr3",
      "hapi.fhir.fhir_version=dstu3",
 	  "hapi.fhir.cr_enabled=true",
@@ -150,13 +149,6 @@ class ExampleServerDstu3IT implements IServerSupport {
       }
     }
     return count;
-  }
-
-  private Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
-    String json = stringFromResource(theLocation);
-    Bundle bundle = (Bundle) theCtx.newJsonParser().parseResource(json);
-    Bundle result = theClient.transaction().withBundle(bundle).execute();
-    return result;
   }
 
   @Test

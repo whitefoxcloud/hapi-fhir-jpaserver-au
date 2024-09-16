@@ -15,7 +15,6 @@ import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Conditional;
 import org.springframework.context.annotation.Configuration;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -40,37 +39,22 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 
 	public RepositoryValidationInterceptorFactoryR4(
 			RepositoryValidatingRuleBuilder repositoryValidatingRuleBuilder, DaoRegistry daoRegistry) {
-		System.out.println("EERR");
 		this.repositoryValidatingRuleBuilder = repositoryValidatingRuleBuilder;
 		this.fhirContext = daoRegistry.getSystemDao().getContext();
-		System.out.println(this.fhirContext);
 		structureDefinitionResourceProvider = daoRegistry.getResourceDao("StructureDefinition");
-		//structureDefinitionResourceProvider.
 	}
 
 	@Override
 	public RepositoryValidatingInterceptor buildUsingStoredStructureDefinitions() {
-		System.out.println("VVVVR4");
-
-		//structureDefinitionResourceProvider.
 
 		IBundleProvider results = structureDefinitionResourceProvider.search(
 				new SearchParameterMap().setLoadSynchronous(true).add(StructureDefinition.SP_KIND, new TokenParam("resource")));
-		System.out.println("--===========");
-		results.getResources(0,  results.size()).stream().forEach(System.out::println);
-		System.out.println("--===========");
 		Map<String, List<StructureDefinition>> structureDefintions = results.getResources(0, results.size()).stream()
 				.map(StructureDefinition.class::cast)
 				.collect(Collectors.groupingBy(StructureDefinition::getType));
 
 		structureDefintions.forEach((key, value) -> {
 			String[] urls = value.stream().map(StructureDefinition::getUrl).toArray(String[]::new);
-
-			System.out.println("VVVV");
-			Arrays.stream(urls).forEach(System.out::println);
-			System.out.println("===========");
-			System.out.println(value.get(0).getPublisher());
-
 			repositoryValidatingRuleBuilder
 					.forResourcesOfType(key)
 					.requireAtLeastOneProfileOf(urls)
@@ -84,7 +68,6 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 
 	@Override
 	public RepositoryValidatingInterceptor build() {
-		System.out.println("JJJJ");
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
 		// of enabling validation for all Patient resources
 		repositoryValidatingRuleBuilder
@@ -92,7 +75,7 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient")
 				.forResourcesOfType("Practitioner")
 				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner")
-				.and()				
+				.and()
 				.requireValidationToDeclaredProfiles();
 
 		// Do not customize below this line

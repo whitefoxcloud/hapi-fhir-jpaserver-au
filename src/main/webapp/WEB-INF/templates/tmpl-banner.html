@@ -11,6 +11,14 @@
     </div>
 
     <script>
+
+        document.title = "Whitefox Test FHIR Server";
+
+        const liElement = document.querySelector('.nav-item.dropdown');
+        if (liElement) {
+            liElement.remove();
+        }
+
         const sidebarDiv = document.querySelector('.sidebar');
         if (sidebarDiv) {
             sidebarDiv.style.padding = '20px';
@@ -33,6 +41,7 @@
             // Logo image is not available, use the default logo image
             logoImageElement.src = defaultLogoImageUrl;
         };
+
 
     </script>
     <!-- Error banner in case anything went wrong -->

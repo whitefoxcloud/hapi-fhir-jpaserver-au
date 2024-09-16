@@ -30,6 +30,7 @@ import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
+import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
 import ca.uhn.fhir.jpa.packages.IPackageInstallerSvc;
 import ca.uhn.fhir.jpa.packages.PackageInstallationSpec;
 import ca.uhn.fhir.jpa.partition.PartitionManagementProvider;
@@ -43,8 +44,8 @@ import ca.uhn.fhir.jpa.starter.annotations.OnCorsPresent;
 import ca.uhn.fhir.jpa.starter.annotations.OnImplementationGuidesPresent;
 import ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInterceptorFactory;
 import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
+import ca.uhn.fhir.jpa.starter.interceptors.AllowedFormatInterceptor;
 import ca.uhn.fhir.jpa.starter.util.EnvironmentHelper;
-import ca.uhn.fhir.jpa.starter.ig.IImplementationGuideOperationProvider;
 import ca.uhn.fhir.jpa.subscription.util.SubscriptionDebugLogInterceptor;
 import ca.uhn.fhir.jpa.util.ResourceCountCache;
 import ca.uhn.fhir.jpa.validation.JpaValidationSupportChain;
@@ -86,6 +87,9 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @ComponentScan(basePackages = {"${hapi.fhir.custom-bean-packages:}"})
 @Import(ThreadPoolFactoryConfig.class)
 public class StarterJpaConfig {
+
+	@Autowired
+	private AllowedFormatInterceptor allowedFormatInterceptor;
 
 	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(StarterJpaConfig.class);
 
@@ -252,6 +256,7 @@ public class StarterJpaConfig {
 			IJpaSystemProvider jpaSystemProvider,
 			ResourceProviderFactory resourceProviderFactory,
 			JpaStorageSettings jpaStorageSettings,
+			SubscriptionSettings subscriptionSettings,
 			ISearchParamRegistry searchParamRegistry,
 			IValidationSupport theValidationSupport,
 			DatabaseBackedPagingProvider databaseBackedPagingProvider,
@@ -378,7 +383,7 @@ public class StarterJpaConfig {
 
 		corsInterceptor.ifPresent(fhirServer::registerInterceptor);
 
-		if (jpaStorageSettings.getSupportedSubscriptionTypes().size() > 0) {
+		if (!subscriptionSettings.getSupportedSubscriptionTypes().isEmpty()) {
 			// Subscription debug logging
 			fhirServer.registerInterceptor(new SubscriptionDebugLogInterceptor());
 		}
@@ -454,6 +459,8 @@ public class StarterJpaConfig {
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
+
+		fhirServer.registerInterceptor(allowedFormatInterceptor);
 
 		// register custom providers
 		registerCustomProviders(fhirServer, appContext, appProperties.getCustomProviderClasses());

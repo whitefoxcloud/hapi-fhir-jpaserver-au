@@ -68,7 +68,6 @@ public class RepositoryValidationInterceptorFactoryR4B implements IRepositoryVal
 
 	@Override
 	public RepositoryValidatingInterceptor build() {
-		System.out.println("JJJJ");
 
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
 		// of enabling validation for all Patient resources

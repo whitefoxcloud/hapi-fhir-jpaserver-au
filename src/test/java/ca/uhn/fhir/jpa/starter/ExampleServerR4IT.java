@@ -55,15 +55,14 @@ import static org.opencds.cqf.fhir.utility.r4.Parameters.stringPart;
 		NicknameServiceConfig.class,
 		RepositoryConfig.class
 	}, properties = {
-	"spring.profiles.include=storageSettingsTest",
 	"spring.datasource.url=jdbc:h2:mem:dbr4",
 	"hapi.fhir.enable_repository_validating_interceptor=true",
 	"hapi.fhir.fhir_version=r4",
-	//"hapi.fhir.subscription.websocket_enabled=true",
+	"hapi.fhir.subscription.websocket_enabled=true",
 	//"hapi.fhir.mdm_enabled=true",
 	"hapi.fhir.cr.enabled=true",
-	"hapi.fhir.cr.caregaps_section_author=Organization/alphora-author",
-	"hapi.fhir.cr.caregaps_reporter=Organization/alphora",
+	"hapi.fhir.cr.caregaps.section_author=Organization/alphora-author",
+	"hapi.fhir.cr.caregaps.reporter=Organization/alphora",
 	"hapi.fhir.implementationguides.dk-core.name=hl7.fhir.dk.core",
 	"hapi.fhir.implementationguides.dk-core.version=1.1.0",
 	"hapi.fhir.auto_create_placeholder_reference_targets=true",
@@ -129,13 +128,6 @@ class ExampleServerR4IT implements IServerSupport {
 		assertTrue(component.getResource() instanceof MeasureReport);
 		MeasureReport report = (MeasureReport) component.getResource();
 		assertEquals(measureUrl + "|0.0.003", report.getMeasure());
-	}
-
-	private org.hl7.fhir.r4.model.Bundle loadBundle(String theLocation, FhirContext theCtx, IGenericClient theClient) throws IOException {
-		String json = stringFromResource(theLocation);
-		org.hl7.fhir.r4.model.Bundle bundle = (org.hl7.fhir.r4.model.Bundle) theCtx.newJsonParser().parseResource(json);
-		org.hl7.fhir.r4.model.Bundle result = theClient.transaction().withBundle(bundle).execute();
-		return result;
 	}
 
 	public Parameters runCqlExecution(Parameters parameters) {
@@ -237,7 +229,7 @@ class ExampleServerR4IT implements IServerSupport {
 		IIdType mySubscriptionId = methodOutcome.getId();
 
 		// Wait for the subscription to be activated
-		await().atMost(1, TimeUnit.MINUTES).until(()->activeSubscriptionCount(), equalTo(initialActiveSubscriptionCount + 1));
+		await().atMost(1, TimeUnit.MINUTES).until(this::activeSubscriptionCount, equalTo(initialActiveSubscriptionCount + 1));
 
 		/*
 		 * Attach websocket
@@ -275,8 +267,8 @@ class ExampleServerR4IT implements IServerSupport {
 	@Test
 	void testCareGaps() throws IOException {
 
-		var reporter = crProperties.getCareGapsReporter();
-		var author = crProperties.getCareGapsSectionAuthor();
+		var reporter = crProperties.getCareGaps().getReporter();
+		var author = crProperties.getCareGaps().getSection_author();
 
 		assertTrue(reporter.equals("Organization/alphora"));
 		assertTrue(author.equals("Organization/alphora-author"));
