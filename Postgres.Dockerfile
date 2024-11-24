@@ -17,6 +17,5 @@ RUN chown -R postgres:postgres data
 COPY dbdata/init-user.sh /docker-entrypoint-initdb.d/init-user.sh
 RUN chmod +x /docker-entrypoint-initdb.d/init-user.sh
 USER postgres
-RUN /docker-entrypoint-initdb.d/init-user.sh
 
 CMD ["postgres", "-c", "listen_addresses=*"]

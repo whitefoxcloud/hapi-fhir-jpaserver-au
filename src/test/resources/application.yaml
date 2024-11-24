@@ -7,10 +7,10 @@ spring:
     check-location: false
     baselineOnMigrate: true
   datasource:
-    url: jdbc:h2:mem:test_mem
-    username: sa
-    password: null
-    driverClassName: org.h2.Driver
+    url: ${SPRING_DATASOURCE_URL}
+    username: ${SPRING_DATASOURCE_USERNAME}
+    password: ${SPRING_DATASOURCE_PASSWORD}
+    driverClassName: ${SPRING_DATASOURCE_DRIVERCLASSNAME}
     max-active: 15
 
     # database connection pool size
@@ -32,7 +32,7 @@ spring:
       # ca.uhn.fhir.jpa.model.dialect.HapiFhirSQLServerDialect
       # ca.uhn.fhir.jpa.model.dialect.HapiFhirMySQLDialect (Deprecated!)
       #########################################
-      hibernate.dialect: ca.uhn.fhir.jpa.model.dialect.HapiFhirH2Dialect
+      hibernate.dialect: ${SPRING_JPA_PROPERTIES_HIBERNATE_DIALECT}
       #########################################
       #      hibernate.hbm2ddl.auto: update
       #      hibernate.jdbc.batch_size: 20
@@ -85,14 +85,14 @@ hapi:
     #    allow_cascading_deletes: true
     #    allow_contains_searches: true
     #    allow_external_references: true
-    #    allow_multiple_delete: true
+    allow_multiple_delete: true
     #    allow_override_default_search_params: true
     #    auto_create_placeholder_reference_targets: false
     #    cr_enabled: true
     #    default_encoding: JSON
     #    default_pretty_print: true
     #    default_page_size: 20
-    #    delete_expunge_enabled: true
+    delete_expunge_enabled: true
     #    enable_repository_validating_interceptor: false
     #    enable_index_missing_fields: false
     #    enable_index_of_type: true
@@ -105,7 +105,7 @@ hapi:
     #    enforce_referential_integrity_on_delete: false
     #    enforce_referential_integrity_on_write: false
     #    etag_support_enabled: true
-    #    expunge_enabled: true
+    expunge_enabled: true
     #    daoconfig_client_id_strategy: null
     #    client_id_strategy: ALPHANUMERIC
     #    fhirpath_interceptor_enabled: false
@@ -121,7 +121,7 @@ hapi:
     #      partitioning_include_in_search_hashes: false
     #cors:
     #  allow_Credentials: true
-      # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
+    # These are allowed_origin patterns, see: https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/cors/CorsConfiguration.html#setAllowedOriginPatterns-java.util.List-
     #  allowed_origin:
     #    - '*'
 
@@ -150,7 +150,7 @@ hapi:
     tester:
       home:
         name: Local Tester
-        server_address: 'http://localhost:8080/fhir'
+        server_address: "http://localhost:8080/fhir"
         refuse_to_fetch_third_party_urls: false
         fhir_version: R4
       global:
