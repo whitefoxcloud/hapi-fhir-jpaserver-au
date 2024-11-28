@@ -80,6 +80,7 @@ public class AppProperties {
   private Subscription subscription = new Subscription();
   private Cors cors = null;
   private Partitioning partitioning = null;
+  private Boolean validate_resource_status_for_package_upload = true;
   private Boolean install_transitive_ig_dependencies = true;
   private Map<String, PackageInstallationSpec> implementationGuides = null;
 
@@ -103,7 +104,11 @@ public class AppProperties {
   private final List<String> custom_interceptor_classes = new ArrayList<>();
 
 	private final List<String> custom_provider_classes = new ArrayList<>();
+	private Boolean upliftedRefchains_enabled = false;
 
+	private boolean userRequestRetryVersionConflictsInterceptorEnabled = false;
+
+	private List<Integer> search_prefetch_thresholds = new ArrayList<>();
 
 	public List<String> getCustomInterceptorClasses() {
     return custom_interceptor_classes;
@@ -586,6 +591,14 @@ public Cors getCors() {
 		this.install_transitive_ig_dependencies = install_transitive_ig_dependencies;
 	}
 
+  public Boolean getValidate_resource_status_for_package_upload() {
+		return validate_resource_status_for_package_upload;
+	}
+
+	public void setValidate_resource_status_for_package_upload(Boolean validate_resource_status_for_package_upload) {
+		this.validate_resource_status_for_package_upload = validate_resource_status_for_package_upload;
+	}
+
 	public Integer getBundle_batch_pool_size() {
 		return this.bundle_batch_pool_size;
 	}
@@ -643,6 +656,30 @@ public Cors getCors() {
 		this.language_search_parameter_enabled = language_search_parameter_enabled;
 	}
 
+	public List<Integer> getSearch_prefetch_thresholds() {
+		return this.search_prefetch_thresholds;
+	}
+
+	public void  setSearch_prefetch_thresholds(List<Integer> thePrefetchThresholds) {
+		this.search_prefetch_thresholds = thePrefetchThresholds;
+	}
+
+	public boolean getUpliftedRefchains_enabled() {
+		return upliftedRefchains_enabled;
+	}
+
+	public void setUpliftedRefchains_enabled(boolean upliftedRefchains_enabled) {
+		this.upliftedRefchains_enabled = upliftedRefchains_enabled;
+	}
+
+	public Boolean getUserRequestRetryVersionConflictsInterceptorEnabled() {
+		return userRequestRetryVersionConflictsInterceptorEnabled;
+	}
+
+	public void setUserRequestRetryVersionConflictsInterceptorEnabled(Boolean userRequestRetryVersionConflictsInterceptorEnabled) {
+		this.userRequestRetryVersionConflictsInterceptorEnabled = userRequestRetryVersionConflictsInterceptorEnabled;
+	}
+
 	public static class Cors {
     private Boolean allow_Credentials = true;
     private List<String> allowed_origin = List.of("*");
@@ -662,8 +699,6 @@ public Cors getCors() {
     public void setAllow_Credentials(Boolean allow_Credentials) {
       this.allow_Credentials = allow_Credentials;
     }
-
-
   }
 
   public static class Logger {
@@ -774,6 +809,7 @@ public Cors getCors() {
 
     private Boolean partitioning_include_in_search_hashes = false;
     private Boolean allow_references_across_partitions = false;
+    private Boolean conditional_create_duplicate_identifiers_enabled = false;
 
     public Boolean getPartitioning_include_in_search_hashes() {
       return partitioning_include_in_search_hashes;
@@ -788,6 +824,14 @@ public Cors getCors() {
 
     public void setAllow_references_across_partitions(Boolean allow_references_across_partitions) {
       this.allow_references_across_partitions = allow_references_across_partitions;
+    }
+
+    public Boolean getConditional_create_duplicate_identifiers_enabled() {
+      return conditional_create_duplicate_identifiers_enabled;
+    }
+
+    public void setConditional_create_duplicate_identifiers_enabled(Boolean conditional_create_duplicate_identifiers_enabled) {
+      this.conditional_create_duplicate_identifiers_enabled = conditional_create_duplicate_identifiers_enabled;
     }
   }
 
