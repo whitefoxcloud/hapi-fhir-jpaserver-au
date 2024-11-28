@@ -1,0 +1,9 @@
+User-agent: *
+Allow: /
+Disallow: /*
+
+# Host
+Host: https://www.fhir.whitefox.cloud
+
+# Sitemaps
+Sitemap: https://www.fhir.whitefox.cloud/sitemap.xml
