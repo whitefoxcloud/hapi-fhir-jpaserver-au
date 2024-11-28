@@ -5,7 +5,7 @@ services:
     # restart: on-failure
     env_file: env/.app.env
     ports:
-      - "3700:8080"
+      - "80:8080"
     depends_on:
       - hapi-fhir-postgres
 
