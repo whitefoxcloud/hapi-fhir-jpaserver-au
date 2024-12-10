@@ -94,6 +94,12 @@ public class StarterJpaConfig {
 
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
 
+	// Fix Inferno html/json and html/xml issue
+	@Bean
+	public AllowedFormatInterceptor allowedFormatInterceptor() { 
+		return new AllowedFormatInterceptor(); 
+	}
+
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
 		return new FulltextSearchSvcImpl();
