@@ -68,12 +68,13 @@ public class RepositoryValidationInterceptorFactoryR4 implements IRepositoryVali
 
 	@Override
 	public RepositoryValidatingInterceptor build() {
-
 		// Customize the ruleBuilder here to have the rules you want! We will give a simple example
 		// of enabling validation for all Patient resources
 		repositoryValidatingRuleBuilder
 				.forResourcesOfType("Patient")
-				.requireAtLeastProfile("http://hl7.org/fhir/us/core/StructureDefinition/us-core-patient")
+				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-patient")
+				.forResourcesOfType("Practitioner")
+				.requireAtLeastProfile("http://hl7.org.au/fhir/core/StructureDefinition/au-core-practitioner")
 				.and()
 				.requireValidationToDeclaredProfiles();
 

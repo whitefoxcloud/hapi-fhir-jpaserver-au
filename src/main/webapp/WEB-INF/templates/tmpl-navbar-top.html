@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+
+<header th:fragment="top" class="header" id="header">
+   <nav class="navbar navbar-dark bg-dark fixed-top navbar-expand-lg">
+
+      <a class="navbar-brand hidden-xs hidden-sm"
+         th:if="${resourceName} != null and ${resourceName.empty} == false"
+         th:href="'resource?encoding=' + ${encoding} + '&amp;pretty=' + ${pretty} + '&amp;resource=' + ${resourceName}">
+         <img id="logo-notext" src="img/whitefox-logo-notext.svg" height="34"/>
+         <span th:text="${resourceName}"></span>
+         Resource
+      </a>
+      <a class="navbar-brand" th:href="'home?encoding=' + ${encoding} + '&amp;pretty=' + ${pretty}" th:unless="${resourceName} != null and ${resourceName.empty} == false">
+         <img id="logo-notext" src="img/whitefox-logo-notext.svg" height="34"/> Home
+      </a>
+
+      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+         <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <div class="collapse navbar-collapse flex-row-reverse" id="navbarSupportedContent">
+
+         <!--
+         Security Dropdown
+         -->
+         <th:block th:if="${apiKey != null}">
+            <ul class="navbar-nav">
+               <li class="nav-item dropdown">
+                  <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown"><span class="fa fa-key topbarIcon"></span>&nbsp;API Key&nbsp;<span class="caret" /></a>
+                  <ul class="dropdown-menu" role="menu">
+                     <div style="padding: 10px;">
+                        <p>If your chosen server requires an API key / Bearer token, enter it here:</p>
+                        <input type="text" name="apiKey" id="apiKey" th:value="${apiKey}"/>
+
+                        <script type="text/javascript">
+                           $('#apiKey').on('click', function(event){
+                              // The event won't be propagated up to the document NODE and
+                              // therefore delegated events won't be fired
+                              event.stopPropagation();
+                           });
+                        </script>
+                     </div>
+                  </ul>
+               </li>
+            </ul>
+         </th:block>
+
+         <!--
+         SourceCode / About this Server
+         -->
+         <th:block th:replace="tmpl-navbar-top-farright :: farright"/>
+
+      </div>
+
+
+
+   </nav>
+
+</header>
+
+</html>

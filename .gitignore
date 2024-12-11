@@ -23,6 +23,8 @@ target/
 *.tar.gz
 *.rar
 
+!dbdata/db-data.tar.gz
+
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
 ### Windows template
@@ -168,3 +170,6 @@ Temporary Items
 
 # Helm Chart dependencies
 **/charts/*.tgz
+
+.vscode/
+.env
