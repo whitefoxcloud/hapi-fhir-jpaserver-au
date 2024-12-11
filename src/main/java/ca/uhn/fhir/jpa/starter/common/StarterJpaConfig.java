@@ -92,6 +92,9 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @Import(ThreadPoolFactoryConfig.class)
 public class StarterJpaConfig {
 
+	@Autowired
+	private AllowedFormatInterceptor allowedFormatInterceptor;
+
 	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
 
 	@Bean
@@ -456,6 +459,8 @@ public class StarterJpaConfig {
 		// register custom interceptors
 		registerCustomInterceptors(fhirServer, appContext, appProperties.getCustomInterceptorClasses());
 
+		fhirServer.registerInterceptor(allowedFormatInterceptor);
+		
 		// register the IPS Provider
 		if (!theIpsOperationProvider.isEmpty()) {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
