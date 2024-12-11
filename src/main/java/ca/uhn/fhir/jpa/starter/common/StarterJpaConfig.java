@@ -1,5 +1,6 @@
 package ca.uhn.fhir.jpa.starter.common;
 
+import ca.uhn.fhir.batch2.config.Batch2JobRegisterer;
 import ca.uhn.fhir.batch2.coordinator.JobDefinitionRegistry;
 import ca.uhn.fhir.batch2.jobs.export.BulkDataExportProvider;
 import ca.uhn.fhir.batch2.jobs.imprt.BulkDataImportProvider;
@@ -28,6 +29,7 @@ import ca.uhn.fhir.jpa.dao.search.IHSearchSortHelper;
 import ca.uhn.fhir.jpa.delete.ThreadSafeResourceDeleterSvc;
 import ca.uhn.fhir.jpa.graphql.GraphQLProvider;
 import ca.uhn.fhir.jpa.interceptor.CascadingDeleteInterceptor;
+import ca.uhn.fhir.jpa.interceptor.UserRequestRetryVersionConflictsInterceptor;
 import ca.uhn.fhir.jpa.interceptor.validation.RepositoryValidatingInterceptor;
 import ca.uhn.fhir.jpa.ips.provider.IpsOperationProvider;
 import ca.uhn.fhir.jpa.model.config.SubscriptionSettings;
@@ -65,6 +67,8 @@ import ca.uhn.fhir.validation.ResultSeverityEnum;
 import com.google.common.base.Strings;
 import jakarta.persistence.EntityManagerFactory;
 import org.hl7.fhir.common.hapi.validation.support.CachingValidationSupport;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.NoSuchBeanDefinitionException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.ConfigurableListableBeanFactory;
@@ -88,10 +92,7 @@ import static ca.uhn.fhir.jpa.starter.common.validation.IRepositoryValidationInt
 @Import(ThreadPoolFactoryConfig.class)
 public class StarterJpaConfig {
 
-	@Autowired
-	private AllowedFormatInterceptor allowedFormatInterceptor;
-
-	private static final org.slf4j.Logger ourLog = org.slf4j.LoggerFactory.getLogger(StarterJpaConfig.class);
+	private static final Logger ourLog = LoggerFactory.getLogger(StarterJpaConfig.class);
 
 	@Bean
 	public IFulltextSearchSvc fullTextSearchSvc() {
@@ -193,11 +194,11 @@ public class StarterJpaConfig {
 	@Primary
 	@Conditional(OnImplementationGuidesPresent.class)
 	public IPackageInstallerSvc packageInstaller(
-			AppProperties appProperties,
-			JobDefinition<ReindexJobParameters> reindexJobParametersJobDefinition,
-			JobDefinitionRegistry jobDefinitionRegistry,
-			IPackageInstallerSvc packageInstallerSvc) {
-		jobDefinitionRegistry.addJobDefinitionIfNotRegistered(reindexJobParametersJobDefinition);
+		AppProperties appProperties,
+		IPackageInstallerSvc packageInstallerSvc,
+		Batch2JobRegisterer batch2JobRegisterer) {
+
+		batch2JobRegisterer.start();
 
 		if (appProperties.getImplementationGuides() != null) {
 			Map<String, PackageInstallationSpec> guides = appProperties.getImplementationGuides();
@@ -460,7 +461,9 @@ public class StarterJpaConfig {
 			fhirServer.registerProvider(theIpsOperationProvider.get());
 		}
 
-		fhirServer.registerInterceptor(allowedFormatInterceptor);
+		if (appProperties.getUserRequestRetryVersionConflictsInterceptorEnabled() ) {
+			fhirServer.registerInterceptor(new UserRequestRetryVersionConflictsInterceptor());
+		}
 
 		// register custom providers
 		registerCustomProviders(fhirServer, appContext, appProperties.getCustomProviderClasses());
@@ -491,6 +494,7 @@ public class StarterJpaConfig {
 			Object interceptor = null;
 			try {
 				interceptor = theAppContext.getBean(clazz);
+				ourLog.info("registering custom interceptor as bean: {}", className);
 			} catch (NoSuchBeanDefinitionException ex) {
 				// no op - if it's not a bean we'll try to create it
 			}
@@ -499,6 +503,7 @@ public class StarterJpaConfig {
 			if (interceptor == null) {
 				try {
 					interceptor = clazz.getConstructor().newInstance();
+					ourLog.info("registering custom interceptor as pojo: {}", className);
 				} catch (Exception e) {
 					throw new ConfigurationException("Unable to instantiate interceptor class : " + className, e);
 				}
@@ -530,6 +535,7 @@ public class StarterJpaConfig {
 			Object provider = null;
 			try {
 				provider = theAppContext.getBean(clazz);
+				ourLog.info("registering custom provider as bean: {}", className);
 			} catch (NoSuchBeanDefinitionException ex) {
 				// no op - if it's not a bean we'll try to create it
 			}
@@ -538,6 +544,7 @@ public class StarterJpaConfig {
 			if (provider == null) {
 				try {
 					provider = clazz.getConstructor().newInstance();
+					ourLog.info("registering custom provider as pojo: {}", className);
 				} catch (Exception e) {
 					throw new ConfigurationException("Unable to instantiate provider class : " + className, e);
 				}
